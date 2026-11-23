@@ -66,6 +66,6 @@ describe('armazenamento local', () => {
     vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
       throw new Error('bloqueado');
     });
-    expect(() => carregar()).not.toThrow();
+    expect(carregar()).toEqual({ ok: false, bruto: '' });
   });
 });

@@ -29,6 +29,6 @@ export function gerarCsv(
   );
   return {
     nomeArquivo: `estoque-${dataLocal(agora)}.csv`,
-    conteudo: '﻿' + [CABECALHO.join(';'), ...linhas].join('\r\n'),
+    conteudo: '\uFEFF' + [CABECALHO.join(';'), ...linhas].join('\r\n'),
   };
 }

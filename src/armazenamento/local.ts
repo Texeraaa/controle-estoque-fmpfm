@@ -10,7 +10,8 @@ export function carregar(): { ok: true; dados: Dados } | { ok: false; bruto: str
   try {
     bruto = localStorage.getItem(CHAVE);
   } catch {
-    return { ok: true, dados: dadosVazios() };
+    // Leitura que lança é estado ilegível, não ausência: nunca tratar como vazio.
+    return { ok: false, bruto: '' };
   }
   if (bruto === null) return { ok: true, dados: dadosVazios() };
   try {

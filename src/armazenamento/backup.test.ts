@@ -151,6 +151,7 @@ describe('validarDados', () => {
     ['estoqueMinimoMil negativo', (d: any) => (d.produtos[0].estoqueMinimoMil = -1000)],
     ['estoqueMinimoMil fracionário', (d: any) => (d.produtos[1].estoqueMinimoMil = 0.5)],
     ['un com saldo não múltiplo de 1000', (d: any) => (d.produtos[0].quantidadeMil = 1500)],
+    ['un com movimentação não múltipla de 1000', (d: any) => (d.movimentacoes[0].quantidadeMil = 10_500)],
     ['unidade inválida', (d: any) => (d.produtos[0].unidade = 'm')],
     ['nome vazio', (d: any) => (d.produtos[0].nome = '   ')],
     ['nome com mais de 80 caracteres', (d: any) => (d.produtos[0].nome = 'a'.repeat(81))],

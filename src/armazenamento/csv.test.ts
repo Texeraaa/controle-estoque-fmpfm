@@ -30,9 +30,9 @@ function linhas(conteudo: string): string[] {
 describe('gerarCsv', () => {
   it('começa com BOM e usa o cabeçalho esperado', () => {
     const { conteudo } = gerarCsv(exemplo(), AGORA);
-    expect(conteudo.startsWith('﻿')).toBe(true);
+    expect(conteudo.startsWith('\uFEFF')).toBe(true);
     expect(linhas(conteudo)[0]).toBe(
-      '﻿Nome;Categoria;Unidade;Quantidade;Estoque mínimo;Preço;Valor em estoque;Situação',
+      '\uFEFFNome;Categoria;Unidade;Quantidade;Estoque mínimo;Preço;Valor em estoque;Situação',
     );
   });
 

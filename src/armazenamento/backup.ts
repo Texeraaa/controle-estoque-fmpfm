@@ -112,6 +112,8 @@ export function validarDados(valor: unknown): Resultado<Dados> {
     exigirUnicos(produtos.map((p) => p.nome.trim().toLowerCase()));
     const ids = new Set(produtos.map((p) => p.id));
     exigir(movimentacoes.every((m) => ids.has(m.produtoId)));
+    const unidades = new Map(produtos.map((p) => [p.id, p.unidade]));
+    exigir(movimentacoes.every((m) => unidades.get(m.produtoId) !== 'un' || (m.quantidadeMil % 1000 === 0 && m.saldoAposMil % 1000 === 0)));
 
     const saldos = new Map<string, number>();
     for (const m of movimentacoes) {

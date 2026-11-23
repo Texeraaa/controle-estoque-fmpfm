@@ -354,3 +354,147 @@ input:focus-visible {
     background: var(--superficie);
   }
 }
+
+/* Diálogos e campos */
+.dialogo {
+  width: calc(100% - 32px);
+  max-width: 528px;
+  max-height: calc(100dvh - 32px);
+  margin: auto;
+  padding: 0;
+  border: 1px solid var(--borda-forte);
+  border-radius: 14px;
+  background: var(--fundo);
+  color: var(--texto);
+  overscroll-behavior: contain;
+}
+
+.dialogo::backdrop {
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.dialogo-corpo {
+  padding: 16px 16px calc(16px + env(safe-area-inset-bottom, 0px));
+}
+
+.dialogo-titulo {
+  margin: 0 0 12px;
+  font-size: 18px;
+  overflow-wrap: anywhere;
+}
+
+.folha-saldo {
+  margin: -4px 0 12px;
+  color: var(--texto-suave);
+}
+
+.campo {
+  margin: 0 0 12px;
+  padding: 0;
+  border: 0;
+}
+
+.campo label,
+.campo legend {
+  display: block;
+  margin-bottom: 4px;
+  padding: 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.campo input:not([type='radio']),
+.campo select {
+  display: block;
+  width: 100%;
+  min-height: 48px;
+  padding: 0 12px;
+  border: 1px solid var(--borda-forte);
+  border-radius: 10px;
+  background: var(--fundo);
+  font-size: 16px;
+}
+
+.campo input[readonly],
+.campo select:disabled {
+  background: var(--superficie);
+  color: var(--texto-suave);
+  opacity: 1;
+}
+
+.campo input[aria-invalid='true'] {
+  border-color: var(--erro);
+}
+
+.campo-erro {
+  margin: 4px 0 0;
+  color: var(--erro);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.campo-dica {
+  margin: 4px 0 0;
+  color: var(--texto-suave);
+  font-size: 13px;
+}
+
+.motivos-grupo {
+  display: flex;
+  gap: 8px;
+}
+
+.motivo {
+  flex: 1;
+  margin: 0;
+  font-weight: 400;
+}
+
+.motivo input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.motivo span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  border: 1px solid var(--borda-forte);
+  border-radius: 10px;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.motivo input:checked + span {
+  border-color: var(--texto);
+  background: var(--texto);
+  color: #fff;
+  font-weight: 600;
+}
+
+.motivo input:focus-visible + span {
+  outline: 2px solid var(--texto);
+  outline-offset: 2px;
+}
+
+.dialogo-acoes .botao:first-child {
+  margin-top: 4px;
+}
+
+.botao-perigo {
+  border-color: var(--erro);
+  color: var(--erro);
+}
+
+/* Folha de movimentação ancorada embaixo em telas estreitas */
+@media (max-width: 600px) {
+  .dialogo-folha {
+    width: 100%;
+    max-width: none;
+    margin: auto 0 0;
+    border-width: 1px 0 0;
+    border-radius: 18px 18px 0 0;
+  }
+}

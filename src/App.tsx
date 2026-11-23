@@ -1,12 +1,24 @@
 import { useState } from 'react';
 import { baixarArquivo } from './armazenamento/baixar';
 import { Abas, type Aba } from './componentes/Abas';
+import { FolhaMovimentacao } from './componentes/FolhaMovimentacao';
+import { FormularioProduto } from './componentes/FormularioProduto';
+import type { Produto } from './dominio/tipos';
 import { Produtos } from './telas/Produtos';
 import { useDados } from './useDados';
 
+type Dialogo =
+  | { tipo: 'produto'; produtoId: string | null }
+  | { tipo: 'movimentacao'; produtoId: string; movimento: 'entrada' | 'saida' }
+  | null;
+
 export default function App() {
   const [aba, setAba] = useState<Aba>('produtos');
-  const { dados, erroCarga, erroGravacao, descartarCorrompido } = useDados();
+  const [dialogo, setDialogo] = useState<Dialogo>(null);
+  const { dados, aplicar, erroCarga, erroGravacao, descartarCorrompido } = useDados();
+  const fechar = () => setDialogo(null);
+  const produtoDoDialogo: Produto | null =
+    dialogo === null ? null : (dados.produtos.find((p) => p.id === dialogo.produtoId) ?? null);
 
   if (erroCarga !== null) {
     const recomecar = () => {
@@ -44,10 +56,29 @@ export default function App() {
         </div>
       )}
       <main className="app-conteudo">
-        {aba === 'produtos' && <Produtos dados={dados} aoNovo={() => {}} aoEditar={() => {}} aoMovimentar={() => {}} />}
+        {aba === 'produtos' && (
+          <Produtos
+            dados={dados} 
+            aoNovo={() => setDialogo({ tipo: 'produto', produtoId: null })}
+            aoEditar={(p) => setDialogo({ tipo: 'produto', produtoId: p.id })}
+            aoMovimentar={(p, movimento) => setDialogo({ tipo: 'movimentacao', produtoId: p.id, movimento })}
+          />
+        )}
         {aba === 'historico' && <h2>Histórico</h2>}
         {aba === 'backup' && <h2>Backup</h2>}
       </main>
+      {dialogo?.tipo === 'produto' && (dialogo.produtoId === null || produtoDoDialogo) && (
+        <FormularioProduto dados={dados} produto={produtoDoDialogo} aoAplicar={aplicar} aoFechar={fechar} />
+      )}
+      {dialogo?.tipo === 'movimentacao' && produtoDoDialogo && (
+        <FolhaMovimentacao
+          dados={dados}
+          produto={produtoDoDialogo}
+          tipo={dialogo.movimento}
+          aoAplicar={aplicar}
+          aoFechar={fechar}
+        />
+      )}
       <Abas ativa={aba} aoMudar={setAba} />
     </div>
   );

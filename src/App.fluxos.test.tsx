@@ -118,7 +118,7 @@ test('excluir produto pede confirmação e remove', async () => {
   const confirmar = vi.spyOn(window, 'confirm').mockReturnValueOnce(false).mockReturnValueOnce(true);
   await userEvent.click(screen.getByRole('button', { name: 'Arroz 5 kg' }));
   await userEvent.click(screen.getByRole('button', { name: 'Excluir produto' }));
-  expect(confirmar).toHaveBeenCalledWith('Excluir "Arroz 5 kg"? 1 movimentações também serão apagadas.');
+  expect(confirmar).toHaveBeenCalledWith('Excluir "Arroz 5 kg"? 1 movimentação também será apagada.');
   expect(screen.getByRole('dialog')).toBeInTheDocument();
   await userEvent.click(screen.getByRole('button', { name: 'Excluir produto' }));
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument();

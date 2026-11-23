@@ -4,6 +4,8 @@ import { Abas, type Aba } from './componentes/Abas';
 import { FolhaMovimentacao } from './componentes/FolhaMovimentacao';
 import { FormularioProduto } from './componentes/FormularioProduto';
 import type { Produto } from './dominio/tipos';
+import { Backup } from './telas/Backup';
+import { Historico } from './telas/Historico';
 import { Produtos } from './telas/Produtos';
 import { useDados } from './useDados';
 
@@ -64,8 +66,8 @@ export default function App() {
             aoMovimentar={(p, movimento) => setDialogo({ tipo: 'movimentacao', produtoId: p.id, movimento })}
           />
         )}
-        {aba === 'historico' && <h2>Histórico</h2>}
-        {aba === 'backup' && <h2>Backup</h2>}
+        {aba === 'historico' && <Historico dados={dados} />}
+        {aba === 'backup' && <Backup dados={dados} aoAplicar={aplicar} />}
       </main>
       {dialogo?.tipo === 'produto' && (dialogo.produtoId === null || produtoDoDialogo) && (
         <FormularioProduto dados={dados} produto={produtoDoDialogo} aoAplicar={aplicar} aoFechar={fechar} />

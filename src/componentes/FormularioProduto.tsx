@@ -82,7 +82,7 @@ export function FormularioProduto({ dados, produto, aoAplicar, aoFechar }: Props
   const excluir = () => {
     if (!produto) return;
     const n = contarMovimentacoes(dados, produto.id);
-    if (window.confirm(`Excluir "${produto.nome}"? ${n} movimentações também serão apagadas.`)) {
+    if (window.confirm(`Excluir "${produto.nome}"? ${n === 1 ? '1 movimentação também será apagada.' : `${n} movimentações também serão apagadas.`}`)) {
       if (aoAplicar(excluirProduto(dados, produto.id))) aoFechar();
     }
   };

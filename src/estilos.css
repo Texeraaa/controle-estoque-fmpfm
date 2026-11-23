@@ -107,10 +107,22 @@ input:focus-visible {
   font-weight: 600;
 }
 
+.botao:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
 .botao-primario {
   border-color: var(--texto);
   background: var(--texto);
   color: #fff;
+}
+
+/* Desabilitado precisa parecer inerte, não só mais claro: cinza liso, sem o preto do primário. */
+.botao-primario:disabled {
+  border-color: var(--borda-forte);
+  background: var(--borda);
+  color: var(--texto-suave);
+  opacity: 1;
 }
 
 .recuperacao-titulo {
@@ -161,6 +173,7 @@ input:focus-visible {
 .produtos-bloco {
   flex: 1;
   min-width: 0;
+  min-height: 44px;
   padding: 10px;
   border: 0;
   border-radius: 10px;
@@ -239,13 +252,16 @@ input:focus-visible {
 
 .produtos-titulo {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   gap: 6px;
 }
 
+/* Alvo de 44 px com o texto rente à linha de baixo: a meta fica colada ao nome sem margem negativa. */
 .produtos-nome {
+  display: flex;
+  align-items: flex-end;
   min-height: 44px;
-  padding: 0;
+  padding: 0 0 2px;
   border: 0;
   background: none;
   font-weight: 600;
@@ -255,6 +271,7 @@ input:focus-visible {
 
 .produtos-etiqueta {
   flex: none;
+  margin-bottom: 4px;
   padding: 1px 6px;
   border-radius: 6px;
   background: var(--aviso-fundo);
@@ -270,7 +287,6 @@ input:focus-visible {
 }
 
 .produtos-meta {
-  margin-top: -8px;
   padding-bottom: 4px;
 }
 
@@ -378,13 +394,13 @@ input:focus-visible {
 }
 
 .dialogo-titulo {
-  margin: 0 0 12px;
+  margin: 0 0 4px;
   font-size: 18px;
   overflow-wrap: anywhere;
 }
 
 .folha-saldo {
-  margin: -4px 0 12px;
+  margin: 0 0 12px;
   color: var(--texto-suave);
 }
 
@@ -612,4 +628,18 @@ input:focus-visible {
 .backup-ok {
   margin: 12px 0 0;
   font-weight: 600;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+
+  .botao:active:not(:disabled),
+  .produtos-novo:active {
+    transform: none;
+  }
 }

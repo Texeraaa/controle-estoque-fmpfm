@@ -239,7 +239,7 @@ export function categorias(dados: Dados): string[] {
   return [...distintas].sort((a, b) => a.localeCompare(b, 'pt-BR'));
 }
 
-const semAcento = (t: string) => t.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+const semAcento = (t: string) => t.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 
 export function filtrarProdutos(produtos: Produto[], busca: string, soBaixo: boolean): Produto[] {
   const termo = semAcento(busca.trim());

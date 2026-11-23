@@ -56,6 +56,13 @@ describe('cadastro', () => {
     expect(e.quantidade).toBe('Para unidade "un", use números inteiros.');
     expect(e.estoqueMinimo).toBe('Para unidade "un", use números inteiros.');
   });
+  it('recusa quantidade e mínimo negativos ou não inteiros (kg)', () => {
+    const kg = { ...arroz, unidade: 'kg' as const };
+    const msg = 'Informe um valor válido.';
+    expect(erro(criarProduto(dadosVazios(), { ...kg, quantidadeMil: -1 })).quantidade).toBe(msg);
+    expect(erro(criarProduto(dadosVazios(), { ...kg, quantidadeMil: 1.5 })).quantidade).toBe(msg);
+    expect(erro(criarProduto(dadosVazios(), { ...kg, estoqueMinimoMil: -1 })).estoqueMinimo).toBe(msg);
+  });
   it('aceita decimal em kg', () => {
     expect(criarProduto(dadosVazios(), { ...arroz, unidade: 'kg', quantidadeMil: 1500 }).ok).toBe(true);
   });
@@ -100,6 +107,11 @@ describe('edição', () => {
     const e = erro(editarProduto(d1, d1.produtos[1].id, { nome: 'arroz 5 kg', categoria: '', precoCentavos: 1, estoqueMinimoMil: 0 }));
     expect(e.nome).toBe('Já existe um produto com esse nome.');
   });
+  it('mínimo negativo em produto kg é recusado', () => {
+    const d0 = ok(criarProduto(dadosVazios(), { ...arroz, unidade: 'kg' }));
+    const e = erro(editarProduto(d0, d0.produtos[0].id, { nome: 'Arroz 5 kg', categoria: '', precoCentavos: 1, estoqueMinimoMil: -1 }));
+    expect(e.estoqueMinimo).toBe('Informe um valor válido.');
+  });
   it('valida preço e mínimo conforme a unidade', () => {
     const { d, id } = base();
     const e = erro(editarProduto(d, id, { nome: 'Arroz 5 kg', categoria: '', precoCentavos: -1, estoqueMinimoMil: 500 }));
@@ -108,7 +120,8 @@ describe('edição', () => {
   });
   it('produto inexistente', () => {
     const { d } = base();
-    expect(editarProduto(d, 'nope', { nome: 'a', categoria: '', precoCentavos: 0, estoqueMinimoMil: 0 }).ok).toBe(false);
+    expect(erro(editarProduto(d, 'nope', { nome: 'a', categoria: '', precoCentavos: 0, estoqueMinimoMil: 0 })).nome)
+      .toBe('Produto não encontrado.');
   });
 });
 
@@ -118,6 +131,7 @@ describe('entrada e saída', () => {
     const r = ok(registrarEntrada(d, id, 3000, '  compra '));
     expect(r.produtos[0].quantidadeMil).toBe(5000);
     expect(r.movimentacoes.at(-1)).toMatchObject({ tipo: 'entrada', quantidadeMil: 3000, saldoAposMil: 5000, observacao: 'compra' });
+    expect(r.movimentacoes.at(-1)!.motivo).toBeUndefined();
   });
   it('observação vazia vira undefined', () => {
     const { d, id } = base();
@@ -137,7 +151,7 @@ describe('entrada e saída', () => {
     d = ok(registrarEntrada(d, id, 2000));
     d = ok(registrarSaida(d, id, 4000, 'ajuste'));
     d = ok(registrarEntrada(d, id, 1000));
-    d = ok(registrarSaida(d, id, 500 * 2, 'perda'));
+    d = ok(registrarSaida(d, id, 1000, 'perda'));
     expect(d.movimentacoes).toHaveLength(7);
     const soma = (t: string) => d.movimentacoes.filter((m) => m.tipo === t).reduce((s, m) => s + m.quantidadeMil, 0);
     expect(d.produtos[0].quantidadeMil).toBe(soma('entrada') - soma('saida'));
@@ -190,8 +204,18 @@ describe('imutabilidade', () => {
     registrarSaida(d, id, 1000, 'venda');
     registrarSaida(d, id, 9000, 'venda');
     excluirProduto(d, id);
-    resumo(d); categorias(d); filtrarProdutos(d.produtos, '', false); filtrarMovimentacoes(d, {});
     expect(d).toEqual(copia);
+
+    // consultas sobre dados com vários produtos e movimentações fora de ordem
+    let m = ok(criarProduto(ok(criarProduto(dadosVazios(), { ...arroz, nome: 'Zebra' }, '2026-01-02T00:00:00.000Z')), { ...arroz, nome: 'Água' }, '2026-01-01T00:00:00.000Z'));
+    m = ok(registrarEntrada(m, m.produtos[0].id, 1000, undefined, '2026-01-03T00:00:00.000Z'));
+    const copiaM = structuredClone(m);
+    resumo(m); categorias(m);
+    filtrarProdutos(m.produtos, '', false);
+    filtrarProdutos(m.produtos, '', true);
+    filtrarMovimentacoes(m, {});
+    filtrarMovimentacoes(m, { tipo: 'entrada' });
+    expect(m).toEqual(copiaM);
   });
 });
 

@@ -1,12 +1,356 @@
+:root {
+  --fundo: #fff;
+  --texto: #1c1c1e;
+  --texto-suave: #66666e;
+  --superficie: #f1f1f4;
+  --borda: #ececf0;
+  --borda-forte: #c9c9cf;
+  --aviso: #b45309;
+  --aviso-fundo: #fdf0dc;
+  --erro: #b42318;
+  --altura-abas: 56px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
+  overscroll-behavior: none;
+}
+
 body {
   margin: 0;
-  font-family: system-ui, sans-serif;
-  background: #fff;
-  color: #111;
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-size: 16px;
+  line-height: 1.4;
+  background: var(--fundo);
+  color: var(--texto);
+}
+
+button,
+input {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+button:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--texto);
+  outline-offset: 2px;
 }
 
 #root {
   max-width: 560px;
   margin: 0 auto;
-  padding: 16px;
+}
+
+/* App */
+.app {
+  min-height: 100dvh;
+  padding-bottom: calc(var(--altura-abas) + env(safe-area-inset-bottom, 0px));
+}
+
+.app-cabecalho {
+  padding: calc(14px + env(safe-area-inset-top, 0px)) 16px 8px;
+}
+
+.app-cabecalho h1 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.app-conteudo {
+  padding: 0 16px 16px;
+}
+
+.app-conteudo h2 {
+  margin: 8px 0;
+  font-size: 18px;
+}
+
+.app-faixa {
+  margin: 0 16px 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--aviso-fundo);
+  color: var(--aviso);
+  font-weight: 600;
+}
+
+/* Botões gerais */
+.botao {
+  display: block;
+  width: 100%;
+  min-height: 48px;
+  margin-top: 12px;
+  padding: 0 16px;
+  border: 1px solid var(--borda-forte);
+  border-radius: 10px;
+  background: var(--fundo);
+  font-weight: 600;
+}
+
+.botao-primario {
+  border-color: var(--texto);
+  background: var(--texto);
+  color: #fff;
+}
+
+.recuperacao-titulo {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+/* Abas */
+.abas {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  max-width: 560px;
+  margin: 0 auto;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  border-top: 1px solid var(--borda);
+  background: var(--fundo);
+}
+
+.abas-botao {
+  flex: 1;
+  min-height: var(--altura-abas);
+  border: 0;
+  background: none;
+  font-size: 14px;
+  color: var(--texto-suave);
+}
+
+.abas-botao:active {
+  background: var(--superficie);
+}
+
+.abas-botao[aria-current='page'] {
+  color: var(--texto);
+  font-weight: 700;
+  box-shadow: inset 0 2px 0 var(--texto);
+}
+
+/* Produtos */
+.produtos-resumo {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.produtos-bloco {
+  flex: 1;
+  min-width: 0;
+  padding: 10px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--superficie);
+  font-size: 13px;
+  font-weight: 600;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+
+.produtos-bloco-alerta {
+  background: var(--aviso-fundo);
+  color: var(--aviso);
+}
+
+.produtos-bloco-alerta[aria-pressed='true'] {
+  box-shadow: inset 0 0 0 2px var(--aviso);
+}
+
+.produtos-busca {
+  display: block;
+  width: 100%;
+  min-height: 44px;
+  margin-bottom: 10px;
+  padding: 0 12px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: var(--superficie);
+  font-size: 16px;
+}
+
+.produtos-filtros {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.produtos-filtro {
+  min-height: 44px;
+  padding: 0 16px;
+  border: 1px solid var(--borda-forte);
+  border-radius: 999px;
+  background: var(--fundo);
+  font-size: 14px;
+}
+
+.produtos-filtro[aria-pressed='true'] {
+  border-color: var(--texto);
+  background: var(--texto);
+  color: #fff;
+}
+
+.produtos-filtro-alerta:not([aria-pressed='true']) {
+  border-color: var(--aviso);
+  color: var(--aviso);
+}
+
+.produtos-lista {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.produtos-linha {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  border-top: 1px solid var(--borda);
+}
+
+.produtos-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.produtos-titulo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.produtos-nome {
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-weight: 600;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+
+.produtos-etiqueta {
+  flex: none;
+  padding: 1px 6px;
+  border-radius: 6px;
+  background: var(--aviso-fundo);
+  color: var(--aviso);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.produtos-meta,
+.produtos-minimo {
+  font-size: 12px;
+  color: var(--texto-suave);
+}
+
+.produtos-meta {
+  margin-top: -8px;
+  padding-bottom: 4px;
+}
+
+.produtos-qtd {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  min-width: 56px;
+  text-align: right;
+}
+
+.produtos-saldo {
+  font-weight: 700;
+}
+
+.produtos-linha-baixo .produtos-saldo {
+  color: var(--aviso);
+}
+
+.produtos-acoes {
+  display: flex;
+  gap: 6px;
+}
+
+.produtos-mov {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--borda-forte);
+  border-radius: 10px;
+  background: var(--fundo);
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.produtos-mov:active:not(:disabled),
+.produtos-filtro:active,
+.produtos-nome:active {
+  background: var(--superficie);
+}
+
+.produtos-vazio {
+  padding: 32px 0;
+  text-align: center;
+  color: var(--texto-suave);
+}
+
+.produtos-novo-area {
+  position: sticky;
+  bottom: calc(var(--altura-abas) + env(safe-area-inset-bottom, 0px) + 12px);
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+
+.produtos-novo {
+  min-height: 48px;
+  padding: 0 20px;
+  border: 1px solid var(--texto);
+  border-radius: 999px;
+  background: var(--texto);
+  color: #fff;
+  font-weight: 600;
+}
+
+.produtos-novo:active {
+  transform: scale(0.98);
+}
+
+.produtos-novo-destaque {
+  width: 100%;
+  border-radius: 10px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .abas-botao:hover,
+  .produtos-mov:hover:not(:disabled),
+  .produtos-filtro:hover:not([aria-pressed='true']),
+  .produtos-nome:hover {
+    background: var(--superficie);
+  }
 }

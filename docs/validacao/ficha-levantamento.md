@@ -14,7 +14,7 @@ Perguntas para confirmar, com o comerciante real, as suposições do projeto. Na
 
 Cada pergunta corresponde a uma suposição da especificação. O que fazer se a resposta contrariar a suposição está na última coluna.
 
-| Nº | Pergunta | Resposta | Se a resposta for "não" |
+| Nº | Pergunta | Resposta | Se a resposta contrariar a suposição |
 |---|---|---|---|
 | 1 | Que aparelho você usa no balcão ou na hora de mexer no estoque: celular, computador ou nenhum? | | Rever a prioridade do layout para computador |
 | 2 | Que unidades você usa para contar seus produtos? Unidade, quilo, litro, caixa, pacote, metro, outra? | | Acrescentar unidades à lista (hoje: un, kg e L) |

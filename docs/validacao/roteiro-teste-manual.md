@@ -18,7 +18,7 @@ Os mesmos passos da demonstração, com o resultado esperado. As colunas "Result
 | 10 | Tocar em **−** e digitar uma quantidade maior que o saldo | Aparece "Saída maior que o saldo. Disponível: ..." e **Registrar saída** fica desabilitado | | |
 | 11 | Tocar em **Cancelar** depois do passo 10 | A folha fecha e o saldo continua o mesmo | | |
 | 12 | Registrar uma saída igual ao saldo inteiro | O saldo vai a zero, o produto ganha a etiqueta **baixo** e o botão **−** fica desabilitado | | |
-| 13 | Tocar em **Estoque baixo** | Só os produtos com a etiqueta **baixo** aparecem | | |
+| 13 | Tocar no botão **Estoque baixo (N)** (N é o número de produtos com estoque baixo) | Só os produtos com a etiqueta **baixo** aparecem | | |
 | 14 | Tocar em **Todos** | Todos os produtos voltam à lista | | |
 | 15 | Digitar parte do nome de um produto no campo de busca | Só os produtos que combinam aparecem; sem resultado, aparece "Nenhum produto encontrado" | | |
 | 16 | Tocar no nome de um produto | Abre **Editar produto**, com unidade e quantidade somente para leitura e o texto "Para alterar a quantidade, registre uma entrada ou saída." | | |

@@ -52,7 +52,7 @@ Este roteiro guia a conversa com o comerciante. Ele ainda não foi usado.
 ### 5. Ver o alerta de estoque baixo
 
 1. Olhe o produto que está no estoque mínimo ou abaixo dele: aparece a etiqueta **baixo**.
-2. Toque em **Estoque baixo** para ver só esses produtos.
+2. Toque no botão **Estoque baixo (N)** (N é o número de produtos com estoque baixo) para ver só esses produtos.
 3. Toque em **Todos** para voltar à lista completa.
 
 ### 6. Ver o histórico

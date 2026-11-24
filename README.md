@@ -60,9 +60,10 @@ Guarde o arquivo `.json` fora do aparelho (e-mail, nuvem, pendrive).
 - Um aparelho, um navegador, uma pessoa. Não há login nem sincronização entre aparelhos.
 - Sem servidor, banco na nuvem, vendas, caixa, nota fiscal, código de barras, fornecedores ou relatórios gráficos.
 - Unidades disponíveis: `un`, `kg` e `L`. A unidade não muda depois que o produto é criado.
-- A quantidade de um produto só muda por entrada ou saída. Para corrigir uma contagem, registre uma entrada ou uma saída com motivo "Ajuste".
+- A quantidade de um produto só muda por entrada ou saída. Para corrigir uma contagem, registre uma entrada, ou uma saída com motivo "Ajuste" (só as saídas têm motivo).
 - Limites: nome com até 80 caracteres, quantidade e estoque mínimo até 1.000.000, preço até R$ 1.000.000,00.
 - O armazenamento do navegador tem limite de cerca de 5 MB, suficiente para centenas de produtos e alguns milhares de movimentações.
+- No Safari do iPhone e do iPad, o navegador pode apagar os dados salvos de um site que fica 7 dias sem ser aberto. Por isso, no iPhone, instale o aplicativo na tela inicial e exporte o backup com frequência.
 - Só tema claro.
 - Não foi validado com o público-alvo. Os testes automatizados mostram que as regras funcionam, não que um comerciante consegue usar.
 
@@ -81,4 +82,4 @@ O arquivo `Projeto_Controle_de_Estoque.pptx` não foi alterado. Depois da constr
 
 ## Tecnologias
 
-React, TypeScript, Vite, Vitest e Testing Library. O único código de produção além do próprio projeto é `react` e `react-dom`. As regras de estoque ficam em `src/dominio/`, o armazenamento em `src/armazenamento/`, as telas em `src/telas/` e os componentes em `src/componentes/`.
+React, TypeScript, Vite, Vitest e Testing Library. As únicas dependências de produção são `react` e `react-dom`; além delas, o build entrega o código de execução do Workbox (service worker), gerado pelo `vite-plugin-pwa`. As regras de estoque ficam em `src/dominio/`, o armazenamento em `src/armazenamento/`, as telas em `src/telas/` e os componentes em `src/componentes/`.

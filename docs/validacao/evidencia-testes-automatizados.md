@@ -11,32 +11,36 @@ Comando: `npm test` (executa `vitest run`), na pasta do projeto, branch `feat/co
 > controle-estoque@0.0.0 test
 > vitest run
 
+
  RUN  v5.1.1 /home/texera/Documents/Faculdade/controle-estoque
 
- Test Files  11 passed (11)
-      Tests  177 passed (177)
-   Start at  20:58:16
-   Duration  2.86s (environment 62%, tests 21%, setup 8%, import 7%, transform 1%, worker 1%)
+
+ Test Files  13 passed (13)
+      Tests  201 passed (201)
+   Start at  21:12:13
+   Duration  4.38s (environment 59%, tests 24%, setup 8%, import 7%, transform 1%, worker 1%)
 ```
 
-Resultado: 11 arquivos de teste e 177 testes, todos passaram, nenhum falhou.
+Resultado: 13 arquivos de teste e 201 testes, todos passaram, nenhum falhou. Esta é a execução feita depois das correções da revisão final.
 
 ## Testes por arquivo
 
 | Arquivo | Testes |
 |---|---|
 | `src/dominio/estoque.test.ts` | 38 |
-| `src/dominio/numeros.test.ts` | 15 |
+| `src/dominio/numeros.test.ts` | 26 |
 | `src/armazenamento/backup.test.ts` | 61 |
 | `src/armazenamento/csv.test.ts` | 12 |
 | `src/armazenamento/local.test.ts` | 8 |
+| `src/armazenamento/baixar.test.ts` | 1 |
 | `src/telas/Produtos.test.tsx` | 11 |
-| `src/telas/Historico.test.tsx` | 6 |
+| `src/telas/Historico.test.tsx` | 7 |
 | `src/telas/Backup.test.tsx` | 9 |
-| `src/App.fluxos.test.tsx` | 8 |
-| `src/App.test.tsx` | 3 |
-| `src/useDados.test.ts` | 6 |
-| Total | 177 |
+| `src/App.fluxos.test.tsx` | 12 |
+| `src/App.falhaGravacao.test.tsx` | 5 |
+| `src/App.test.tsx` | 4 |
+| `src/useDados.test.ts` | 7 |
+| Total | 201 |
 
 ## Correspondência com os quatro testes previstos no slide 7
 

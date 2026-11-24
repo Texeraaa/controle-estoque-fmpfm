@@ -51,3 +51,21 @@ test('armazenamento que não pode ser lido também mostra a tela de dados ilegí
   expect(screen.getByText('Os dados salvos estão ilegíveis.')).toBeInTheDocument();
   expect(screen.queryByRole('button', { name: 'Novo produto' })).not.toBeInTheDocument();
 });
+
+test('menu lateral: recolhe, expande e lembra a escolha', async () => {
+  const { unmount } = render(<App />);
+  expect(screen.getByText('Estoka', { selector: '.menu .marca-nome' })).toBeInTheDocument();
+  const recolher = screen.getByRole('button', { name: 'Recolher menu' });
+  expect(recolher).toHaveAttribute('aria-expanded', 'true');
+  await userEvent.click(recolher);
+  const expandir = screen.getByRole('button', { name: 'Expandir menu' });
+  expect(expandir).toHaveAttribute('aria-expanded', 'false');
+  expect(document.querySelector('.app')).toHaveClass('app-menu-recolhido');
+  // Recolhido, as seções continuam com nome acessível.
+  expect(screen.getByRole('button', { name: 'Histórico' })).toBeInTheDocument();
+  unmount();
+  render(<App />);
+  expect(screen.getByRole('button', { name: 'Expandir menu' })).toBeInTheDocument();
+  await userEvent.click(screen.getByRole('button', { name: 'Expandir menu' }));
+  expect(document.querySelector('.app')).not.toHaveClass('app-menu-recolhido');
+});

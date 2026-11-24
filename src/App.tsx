@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Marca } from './componentes/Marca';
 import { baixarArquivo } from './armazenamento/baixar';
 import { Abas, type Aba } from './componentes/Abas';
 import { FolhaMovimentacao } from './componentes/FolhaMovimentacao';
@@ -14,10 +15,30 @@ type Dialogo =
   | { tipo: 'movimentacao'; produtoId: string; movimento: 'entrada' | 'saida' }
   | null;
 
+const CHAVE_MENU = 'controle-estoque:menu-recolhido';
+
+function lerMenuRecolhido(): boolean {
+  try {
+    return localStorage.getItem(CHAVE_MENU) === '1';
+  } catch {
+    return false;
+  }
+}
+
 export default function App() {
   const [aba, setAba] = useState<Aba>('produtos');
   const [dialogo, setDialogo] = useState<Dialogo>(null);
   const { dados, aplicar, erroCarga, erroGravacao, descartarCorrompido } = useDados();
+  const [menuRecolhido, setMenuRecolhido] = useState(lerMenuRecolhido);
+  const alternarMenu = () => {
+    const novo = !menuRecolhido;
+    setMenuRecolhido(novo);
+    try {
+      localStorage.setItem(CHAVE_MENU, novo ? '1' : '0');
+    } catch {
+      // Preferência de exibição: sem armazenamento, vale só até recarregar.
+    }
+  };
   const fechar = () => setDialogo(null);
   const produtoDoDialogo: Produto | null =
     dialogo === null ? null : (dados.produtos.find((p) => p.id === dialogo.produtoId) ?? null);
@@ -31,7 +52,8 @@ export default function App() {
     return (
       <div className="app">
         <header className="app-cabecalho">
-          <h1>Estoque</h1>
+          <Marca />
+          <h1 className="so-leitor">Estoque</h1>
         </header>
         <main className="app-conteudo recuperacao">
           <p className="recuperacao-titulo">Os dados salvos estão ilegíveis.</p>
@@ -48,9 +70,10 @@ export default function App() {
   }
 
   return (
-    <div className="app">
+    <div className={menuRecolhido ? 'app app-com-menu app-menu-recolhido' : 'app app-com-menu'}>
       <header className="app-cabecalho">
-        <h1>Estoque</h1>
+        <Marca />
+        <h1 className="so-leitor">Estoque</h1>
       </header>
       {erroGravacao && (
         <div className="app-faixa" role="alert">
@@ -60,7 +83,7 @@ export default function App() {
       <main className="app-conteudo">
         {aba === 'produtos' && (
           <Produtos
-            dados={dados} 
+            dados={dados}
             aoNovo={() => setDialogo({ tipo: 'produto', produtoId: null })}
             aoEditar={(p) => setDialogo({ tipo: 'produto', produtoId: p.id })}
             aoMovimentar={(p, movimento) => setDialogo({ tipo: 'movimentacao', produtoId: p.id, movimento })}
@@ -81,7 +104,7 @@ export default function App() {
           aoFechar={fechar}
         />
       )}
-      <Abas ativa={aba} aoMudar={setAba} />
+      <Abas ativa={aba} aoMudar={setAba} recolhido={menuRecolhido} aoAlternar={alternarMenu} />
     </div>
   );
 }

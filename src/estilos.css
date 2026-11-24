@@ -4,8 +4,8 @@
   --texto-suave: #66666e;
   --superficie: #f1f1f4;
   --borda: #ececf0;
-  --borda-forte: #c9c9cf;
-  --aviso: #b45309;
+  --borda-forte: #8e8e96;
+  --aviso: #a14a07;
   --aviso-fundo: #fdf0dc;
   --erro: #b42318;
   --altura-abas: 56px;
@@ -394,9 +394,13 @@ input:focus-visible {
 }
 
 .dialogo-titulo {
-  margin: 0 0 4px;
+  margin: 0 0 12px;
   font-size: 18px;
   overflow-wrap: anywhere;
+}
+
+.dialogo-titulo-saldo {
+  margin-bottom: 4px;
 }
 
 .folha-saldo {

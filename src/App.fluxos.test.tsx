@@ -125,3 +125,31 @@ test('excluir produto pede confirmação e remove', async () => {
   expect(screen.getByText('Nenhum produto cadastrado')).toBeInTheDocument();
   expect(guardado().movimentacoes).toHaveLength(0);
 });
+
+test.each([
+  ['un', '9007199254740991'],
+  ['un', '99999999999999999999'],
+  ['kg', '99999999999999999999'],
+])('quantidade digitada gigante em %s (%s) mostra Valor muito alto.', async (unidade, valor) => {
+  render(<App />);
+  await userEvent.click(screen.getByRole('button', { name: 'Novo produto' }));
+  await userEvent.type(screen.getByLabelText('Nome'), 'Arroz');
+  await userEvent.selectOptions(screen.getByLabelText('Unidade'), unidade);
+  await userEvent.type(screen.getByLabelText('Preço (R$)'), '99999999999999999999');
+  await userEvent.type(screen.getByLabelText('Quantidade inicial'), valor);
+  await userEvent.type(screen.getByLabelText('Estoque mínimo'), valor);
+  await userEvent.click(screen.getByRole('button', { name: 'Salvar' }));
+  const dialogo = screen.getByRole('dialog');
+  expect(within(dialogo).getByLabelText('Preço (R$)')).toHaveAccessibleDescription('Valor muito alto.');
+  expect(within(dialogo).getByLabelText('Quantidade inicial')).toHaveAccessibleDescription('Valor muito alto.');
+  expect(within(dialogo).getByLabelText('Estoque mínimo')).toHaveAccessibleDescription('Valor muito alto.');
+  expect(guardado().produtos ?? []).toHaveLength(0);
+});
+
+test('entrada com quantidade digitada gigante mostra Valor muito alto.', async () => {
+  await comArroz();
+  await userEvent.click(screen.getByRole('button', { name: 'Registrar entrada de Arroz 5 kg' }));
+  await userEvent.type(screen.getByLabelText('Quantidade'), '99999999999999999999');
+  await userEvent.click(screen.getByRole('button', { name: 'Registrar entrada' }));
+  expect(within(screen.getByRole('dialog')).getByRole('alert')).toHaveTextContent('Valor muito alto.');
+});

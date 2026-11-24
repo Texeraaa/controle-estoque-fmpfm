@@ -42,3 +42,12 @@ test('dados ilegíveis mostram a tela de recuperação e Começar do zero pede c
   expect(screen.queryByText('Os dados salvos estão ilegíveis.')).not.toBeInTheDocument();
   expect(screen.getByText('Nenhum produto cadastrado')).toBeInTheDocument();
 });
+
+test('armazenamento que não pode ser lido também mostra a tela de dados ilegíveis', () => {
+  vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
+    throw new Error('bloqueado');
+  });
+  render(<App />);
+  expect(screen.getByText('Os dados salvos estão ilegíveis.')).toBeInTheDocument();
+  expect(screen.queryByRole('button', { name: 'Novo produto' })).not.toBeInTheDocument();
+});

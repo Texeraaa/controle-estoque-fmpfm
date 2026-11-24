@@ -6,5 +6,6 @@ export function baixarArquivo(nome: string, conteudo: string, tipo: string): voi
   document.body.appendChild(a);
   a.click();
   a.remove();
-  URL.revokeObjectURL(url);
+  // Safari falha o download se a URL for revogada logo após o clique.
+  setTimeout(() => URL.revokeObjectURL(url), 60_000);
 }

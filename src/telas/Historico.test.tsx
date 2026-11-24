@@ -29,7 +29,7 @@ test('lista da mais recente para a mais antiga com sinal, motivo, observação, 
   const primeiro = within(itens[0]);
   expect(primeiro.getByText('Saída')).toBeInTheDocument();
   expect(primeiro.getByText('Arroz 5 kg')).toBeInTheDocument();
-  expect(primeiro.getByText('−1 un')).toBeInTheDocument();
+  expect(primeiro.getByText('\u22121 un')).toBeInTheDocument();
   expect(primeiro.getByText('perda')).toBeInTheDocument();
   expect(primeiro.getByText('caiu no chão')).toBeInTheDocument();
   expect(primeiro.getByText(formatarDataHora('2026-03-03T10:00:00.000Z'))).toBeInTheDocument();
@@ -74,4 +74,11 @@ test('mostra 50 por vez e carrega mais', async () => {
 test('sem movimentações mostra mensagem de vazio', () => {
   render(<Historico dados={dadosVazios()} />);
   expect(screen.getByText('Nenhuma movimentação registrada')).toBeInTheDocument();
+});
+
+test('filtro sem resultado diz que nada foi encontrado, não que não há registros', async () => {
+  render(<Historico dados={base()} />);
+  await userEvent.selectOptions(screen.getByLabelText('Produto'), 'Feijão carioca 1 kg');
+  await userEvent.selectOptions(screen.getByLabelText('Tipo'), 'Saídas');
+  expect(screen.getByText('Nenhuma movimentação encontrada')).toBeInTheDocument();
 });

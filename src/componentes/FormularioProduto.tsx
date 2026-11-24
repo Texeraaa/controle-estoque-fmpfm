@@ -9,6 +9,7 @@ import {
 } from '../dominio/estoque';
 import { formatarQuantidade, numeroParaTexto, parsePreco, parseQuantidade } from '../dominio/numeros';
 import { MAX_NOME, UNIDADES, type Dados, type Produto, type Unidade } from '../dominio/tipos';
+import { MSG_FALHA_GRAVAR } from './mensagens';
 import { useDialogo } from './useDialogo';
 
 interface Props {
@@ -41,9 +42,11 @@ export function FormularioProduto({ dados, produto, aoAplicar, aoFechar }: Props
   const [quantidade, setQuantidade] = useState(produto ? numeroParaTexto(produto.quantidadeMil, 3) : '');
   const [minimo, setMinimo] = useState(produto ? numeroParaTexto(produto.estoqueMinimoMil, 3) : '');
   const [erros, setErros] = useState<ErrosProduto>({});
+  const [falhaGravar, setFalhaGravar] = useState(false);
 
   const salvar = (e: FormEvent) => {
     e.preventDefault();
+    setFalhaGravar(false);
     const erroPreco = preco.trim() !== '' && parsePreco(preco) === null ? MSG_INVALIDO : undefined;
     const centavos = preco.trim() === '' ? 0 : (parsePreco(preco) ?? 0);
     const min = lerQuantidade(minimo, unidade);
@@ -77,13 +80,16 @@ export function FormularioProduto({ dados, produto, aoAplicar, aoFechar }: Props
       return;
     }
     if (aoAplicar(r.valor)) aoFechar();
+    else setFalhaGravar(true);
   };
 
   const excluir = () => {
     if (!produto) return;
     const n = contarMovimentacoes(dados, produto.id);
     if (window.confirm(`Excluir "${produto.nome}"? ${n === 1 ? '1 movimentação também será apagada.' : `${n} movimentações também serão apagadas.`}`)) {
+      setFalhaGravar(false);
       if (aoAplicar(excluirProduto(dados, produto.id))) aoFechar();
+      else setFalhaGravar(true);
     }
   };
 
@@ -199,6 +205,12 @@ export function FormularioProduto({ dados, produto, aoAplicar, aoFechar }: Props
           />
           {erro('estoqueMinimo')}
         </div>
+
+        {falhaGravar && (
+          <p className="campo-erro" role="alert">
+            {MSG_FALHA_GRAVAR}
+          </p>
+        )}
 
         <div className="dialogo-acoes">
           <button type="submit" className="botao botao-primario">

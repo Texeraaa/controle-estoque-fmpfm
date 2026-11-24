@@ -1,14 +1,20 @@
-import type { Unidade } from './tipos';
+import { MAX_QUANTIDADE_MIL, type Unidade } from './tipos';
 
-/** Inteiro escalado por 10^casas, ou null se vazio, inválido, negativo ou com mais casas que o permitido. */
+/** Inteiro escalado por 10^casas, ou null se vazio, inválido, negativo ou com mais casas que o permitido. Valores além do inteiro seguro saturam em MAX_SAFE_INTEGER. */
 export function parseDecimal(texto: string, casas: number): number | null {
   let t = texto.trim();
-  if (t.includes(',')) t = t.replace(/\./g, '').replace(',', '.');
+  if (t.includes(',')) {
+    // Com vírgula decimal, o ponto só vale como separador de milhar, em grupos de três dígitos.
+    const partes = t.split(',');
+    if (partes.length !== 2 || !/^(\d+|\d{1,3}(\.\d{3})+)$/.test(partes[0])) return null;
+    t = `${partes[0].replace(/\./g, '')}.${partes[1]}`;
+  }
   if (!/^\d+(\.\d+)?$/.test(t)) return null;
   const [inteira, decimal = ''] = t.split('.');
   if (decimal.length > casas) return null;
   const valor = Number(inteira + decimal.padEnd(casas, '0'));
-  return Number.isSafeInteger(valor) ? valor : null;
+  // Número bem formado, porém grande demais para ser exato: satura para o domínio dizer "Valor muito alto".
+  return Number.isSafeInteger(valor) ? valor : Number.MAX_SAFE_INTEGER;
 }
 
 export function parsePreco(texto: string): number | null {
@@ -18,7 +24,9 @@ export function parsePreco(texto: string): number | null {
 export function parseQuantidade(texto: string, unidade: Unidade): number | null {
   const mil = parseDecimal(texto, unidade === 'un' ? 0 : 3);
   if (mil === null) return null;
-  return unidade === 'un' ? mil * 1000 : mil;
+  if (unidade !== 'un') return mil;
+  // Acima do limite devolve o menor múltiplo de 1000 acima dele, sem perder precisão no produto.
+  return mil > MAX_QUANTIDADE_MIL / 1000 ? MAX_QUANTIDADE_MIL + 1000 : mil * 1000;
 }
 
 /** 1500,3 -> "1,5"; 2000,3 -> "2"; 2890,2 -> "28,90" */

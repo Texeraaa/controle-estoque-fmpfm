@@ -2,6 +2,7 @@ import { useId, useState, type FormEvent } from 'react';
 import { registrarEntrada, registrarSaida } from '../dominio/estoque';
 import { formatarQuantidade, parseQuantidade } from '../dominio/numeros';
 import type { Dados, MotivoSaida, Produto } from '../dominio/tipos';
+import { MSG_FALHA_GRAVAR } from './mensagens';
 import { useDialogo } from './useDialogo';
 
 interface Props {
@@ -26,6 +27,7 @@ export function FolhaMovimentacao({ dados, produto, tipo, aoAplicar, aoFechar }:
   const [motivo, setMotivo] = useState<MotivoSaida>('venda');
   const [observacao, setObservacao] = useState('');
   const [erro, setErro] = useState('');
+  const [falhaGravar, setFalhaGravar] = useState(false);
 
   const mil = parseQuantidade(quantidade, produto.unidade);
   const saldo = formatarQuantidade(produto.quantidadeMil, produto.unidade);
@@ -34,6 +36,7 @@ export function FolhaMovimentacao({ dados, produto, tipo, aoAplicar, aoFechar }:
   const registrar = (e: FormEvent) => {
     e.preventDefault();
     if (excede) return;
+    setFalhaGravar(false);
     if (mil === null) {
       setErro(
         quantidade.trim() !== '' && produto.unidade === 'un' && parseQuantidade(quantidade, 'kg') !== null
@@ -50,6 +53,7 @@ export function FolhaMovimentacao({ dados, produto, tipo, aoAplicar, aoFechar }:
       return;
     }
     if (aoAplicar(r.valor)) aoFechar();
+    else setFalhaGravar(true);
   };
 
   const mensagem = excede ? `Saída maior que o saldo. Disponível: ${saldo}.` : erro;
@@ -57,7 +61,7 @@ export function FolhaMovimentacao({ dados, produto, tipo, aoAplicar, aoFechar }:
   return (
     <dialog ref={ref} className="dialogo dialogo-folha" aria-labelledby={`${id}-titulo`}>
       <form className="dialogo-corpo" onSubmit={registrar} noValidate>
-        <h2 id={`${id}-titulo`} className="dialogo-titulo">
+        <h2 id={`${id}-titulo`} className="dialogo-titulo dialogo-titulo-saldo">
           {saida ? 'Saída' : 'Entrada'} · {produto.nome}
         </h2>
         <p className="folha-saldo">Saldo atual: {saldo}</p>
@@ -114,6 +118,12 @@ export function FolhaMovimentacao({ dados, produto, tipo, aoAplicar, aoFechar }:
             enterKeyHint="done"
           />
         </div>
+
+        {falhaGravar && (
+          <p className="campo-erro" role="alert">
+            {MSG_FALHA_GRAVAR}
+          </p>
+        )}
 
         <div className="dialogo-acoes">
           <button type="submit" className="botao botao-primario" disabled={excede}>

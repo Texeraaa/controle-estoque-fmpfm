@@ -90,7 +90,7 @@ export function Produtos({ dados, aoNovo, aoEditar, aoMovimentar }: Props) {
                     disabled={p.quantidadeMil === 0}
                     onClick={() => aoMovimentar(p, 'saida')}
                   >
-                    −
+                    {'\u2212'}
                   </button>
                   <button
                     type="button"

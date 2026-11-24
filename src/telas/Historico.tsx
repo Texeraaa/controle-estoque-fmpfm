@@ -56,7 +56,9 @@ export function Historico({ dados }: { dados: Dados }) {
       </div>
 
       {todas.length === 0 ? (
-        <p className="historico-vazio">Nenhuma movimentação registrada</p>
+        <p className="historico-vazio">
+          {dados.movimentacoes.length === 0 ? 'Nenhuma movimentação registrada' : 'Nenhuma movimentação encontrada'}
+        </p>
       ) : (
         <ul className="historico-lista">
           {visiveis.map((m) => {
@@ -71,7 +73,7 @@ export function Historico({ dados }: { dados: Dados }) {
                   </span>
                   <span className="historico-produto">{produto?.nome ?? ''}</span>
                   <span className="historico-qtd">
-                    {entrada ? '+' : '−'}
+                    {entrada ? '+' : '\u2212'}
                     {formatarQuantidade(m.quantidadeMil, unidade)}
                   </span>
                 </div>

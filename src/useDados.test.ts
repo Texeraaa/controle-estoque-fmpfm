@@ -93,3 +93,18 @@ test('evento storage de outra chave é ignorado', () => {
   });
   expect(result.current.dados.produtos).toHaveLength(0);
 });
+
+test('getItem que lança vira erroCarga vazio (não nulo) e aplicar não grava nada', () => {
+  vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
+    throw new Error('bloqueado');
+  });
+  const setItem = vi.spyOn(Storage.prototype, 'setItem');
+  const { result } = renderHook(() => useDados());
+  expect(result.current.erroCarga).toBe('');
+  let ok = true;
+  act(() => {
+    ok = result.current.aplicar(comArroz());
+  });
+  expect(ok).toBe(false);
+  expect(setItem).not.toHaveBeenCalled();
+});
